@@ -97,10 +97,17 @@ $posts->execute();
         <div class="msg">
           <img src="member_picture/<?php echo h($post['picture']); ?>" height="48" width="48">
           <p class="msgtext"><?php echo makelink(h($post['message'])); ?><span class="name">(<?php echo h($post['name']); ?>)</span>[<a href="index.php?res=<?php echo h($post['id']); ?>">Re:</a>]
-      <!--いいねボタン部分-->
+            <!--いいねボタン部分-->
+            <?php
+            $likes = $db->prepare('SELECT COUNT(*) as likedata  FROM likeactions WHERE message_id=? AND member_id=? AND switch=TRUE');
+            $likes->bindParam(1, $post['id'], PDO::PARAM_INT);
+            $likes->bindParam(2, $member['id'], PDO::PARAM_INT);
+            $likes->execute();
+            $like=$likes->fetch();
+            ?>
             <form action="" method="post">
               <button class="heart" type="submit" name="like" value="change">
-                <i class="fas fa-heart icon-font" style="color:#f1071a"></i>
+                <i class="fas fa-heart icon-font" <?php if ($like['likedata']) : ?>style="color:#f1071a" <?php endif; ?>></i>
               </button>
             </form>
           </p>
