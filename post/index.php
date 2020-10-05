@@ -97,9 +97,10 @@ $posts->execute();
         <div class="msg">
           <img src="member_picture/<?php echo h($post['picture']); ?>" height="48" width="48">
           <p class="msgtext"><?php echo makelink(h($post['message'])); ?><span class="name">(<?php echo h($post['name']); ?>)</span>[<a href="index.php?res=<?php echo h($post['id']); ?>">Re:</a>]
+      <!--いいねボタン部分-->
             <form action="" method="post">
-              <button class="heart" type="submit" name="good" value="change">
-                <i class="fas fa-heart icon-font"></i>
+              <button class="heart" type="submit" name="like" value="change">
+                <i class="fas fa-heart icon-font" style="color:#f1071a"></i>
               </button>
             </form>
           </p>
