@@ -72,8 +72,8 @@ $posts->execute();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>ひとこと掲示板</title>
-
   <link rel="stylesheet" href="style.css" />
+  <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 </head>
 
 <body>
@@ -85,7 +85,7 @@ $posts->execute();
       <div style="text-align:right"><a href="logout.php">ログアウト</a></div>
       <form action="" method="post">
         <dl>
-          <dt><img src="member_picture/<?php echo h($member['picture']); ?>"height="48" width="48"><?php echo h($member['name']); ?>さん メッセージをどうぞ</dt>
+          <dt><img src="member_picture/<?php echo h($member['picture']); ?>" height="48" width="48"><?php echo h($member['name']); ?>さん メッセージをどうぞ</dt>
           <dd><textarea name="message" cols="50" rows="5"><?php echo h($reply_message); ?></textarea>
             <input type="hidden" name="reply_post_id" value="<?php h($_REQUEST['res']); ?>">
           </dd>
@@ -96,7 +96,12 @@ $posts->execute();
       foreach ($posts as $post) : ?>
         <div class="msg">
           <img src="member_picture/<?php echo h($post['picture']); ?>" height="48" width="48">
-          <p><?php echo makelink(h($post['message'])); ?><span class="name">(<?php echo h($post['name']); ?>)</span>[<a href="index.php?res=<?php echo h($post['id']); ?>">Re:</a>]
+          <p class="msgtext"><?php echo makelink(h($post['message'])); ?><span class="name">(<?php echo h($post['name']); ?>)</span>[<a href="index.php?res=<?php echo h($post['id']); ?>">Re:</a>]
+            <form action="" method="post">
+              <button class="heart" type="submit" name="good" value="change">
+                <i class="fas fa-heart icon-font"></i>
+              </button>
+            </form>
           </p>
           <p class="day"><a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
             <?php if ($post['reply_post_id'] > 0) : ?>
@@ -115,12 +120,12 @@ $posts->execute();
           <li>前のページへ</li>
         <?php endif; ?>
         <li>
-        (<?php echo($page); ?>/<?php echo($maxpage); ?>)<?php if ($page < $maxpage) : ?>
+          (<?php echo ($page); ?>/<?php echo ($maxpage); ?>)<?php if ($page < $maxpage) : ?>
         </li>
-          <li><a href="index.php?page=<?php echo ($page + 1); ?>">次のページへ</a></li>
-        <?php else : ?>
-          <li>次のページへ</li>
-        <?php endif; ?>
+        <li><a href="index.php?page=<?php echo ($page + 1); ?>">次のページへ</a></li>
+      <?php else : ?>
+        <li>次のページへ</li>
+      <?php endif; ?>
       </ul>
     </div>
   </div>

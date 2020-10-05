@@ -131,6 +131,7 @@ li {
 	border-top: 1px solid #ccc;
 	padding: 10px 0;
 }
+
 .msg img {
 	float: left;
 	margin-right: 5px;
@@ -142,4 +143,15 @@ li {
 .msg .day a {
 	font-size: 80%;
 	color: #999;
+}
+
+.icon-font{
+	font-size:0.8em;
+	color:#999;
+	border:solid,#333,1px;
+}
+
+.heart{
+	background-color:inherit;
+	border:none;
 }
