@@ -63,7 +63,10 @@ $posts = $db->prepare('SELECT m.name,m.picture,p.* FROM posts p, members m WHERE
 $posts->bindParam(1, $start, PDO::PARAM_INT);
 $posts->execute();
 
+$likecounts = $db->query('SELECT message_id, COUNT(*) as count FROM likeactions GROUP BY message_id');
+$likecounts=$likecounts->fetchall();
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -103,13 +106,17 @@ $posts->execute();
             $likes->bindParam(1, $post['id'], PDO::PARAM_INT);
             $likes->bindParam(2, $member['id'], PDO::PARAM_INT);
             $likes->execute();
-            $like=$likes->fetch();
+            $like = $likes->fetch();
             ?>
-            <form action="" method="post">
-              <button class="heart" type="submit" name="like" value="change">
-                <i class="fas fa-heart icon-font" <?php if ($like['likedata']) : ?>style="color:#f1071a" <?php endif; ?>></i>
-              </button>
-            </form>
+            <button formaction="" formmethod="post" class="heart" type="submit" name="like" value="change">
+              <i class="fas fa-heart icon-font" <?php if ($like['likedata']) : ?>style="color:#f1071a" <?php endif; ?>></i>
+            </button>
+            <?php foreach ($likecounts as $likecount) {
+              if ($likecount['message_id'] == $post['id']) {
+                print('<span>' . ($likecount['count']) . '</span>');
+              }
+            }
+            ?>
           </p>
           <p class="day"><a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
             <?php if ($post['reply_post_id'] > 0) : ?>
