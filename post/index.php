@@ -59,12 +59,36 @@ $page = min($page, $maxpage);
 $start = ($page - 1) * 5;
 
 
+//いいねされた時にデータベースに追加
+if ($_POST['like']='change'){
+  $check=$db->prepare('SELECT COUNT(*) as count,id, switch FROM likeactions WHERE member_id=? AND message_id=?');
+  $check->bindParam(1,$member['id'], PDO::PARAM_INT);
+  $check->bindParam(2,$_POST['msgid'], PDO::PARAM_INT);
+  $check->execute();
+  $result=$check->fetch();
+    if (!$result['count']){
+      $newaction=$db->prepare('INSERT INTO likeactions SET member_id=?,message_id=?,switch=1,created=NOW()');
+      $newaction->bindParam(1,$member['id'], PDO::PARAM_INT);
+      $newaction->bindParam(2,$_POST['msgid'], PDO::PARAM_INT);
+      $newaction->execute();
+    }elseif($result['count']>=1&&$result['switch']==TRUE){
+      $change=$db->prepare('UPDATE likeactions SET switch=0 WHERE id=?');
+      $change->bindParam(1,$result['id'], PDO::PARAM_INT);
+      $change->execute();
+    }elseif($result['count']>=1&&$result['switch']==FALSE){
+      $change=$db->prepare('UPDATE likeactions SET switch=1 WHERE id=?');
+      $change->bindParam(1,$result['id'], PDO::PARAM_INT);
+      $change->execute();
+    }
+}
+
 $posts = $db->prepare('SELECT m.name,m.picture,p.* FROM posts p, members m WHERE p.member_id=m.id ORDER BY p.created DESC LIMIT ?,5');
 $posts->bindParam(1, $start, PDO::PARAM_INT);
 $posts->execute();
 
-$likecounts = $db->query('SELECT message_id, COUNT(*) as count FROM likeactions GROUP BY message_id');
-$likecounts=$likecounts->fetchall();
+//いいねカウント
+$likecounts = $db->query('SELECT message_id, COUNT(*) as count FROM likeactions WHERE switch=TRUE GROUP BY message_id');
+$likecounts=$likecounts->fetchall(PDO::FETCH_ASSOC|PDO::FETCH_GROUP); 
 ?>
 
 <!DOCTYPE html>
@@ -108,14 +132,16 @@ $likecounts=$likecounts->fetchall();
             $likes->execute();
             $like = $likes->fetch();
             ?>
+            <!--いいねボタン-->
+            <form action="" formmethod="post">
             <button formaction="" formmethod="post" class="heart" type="submit" name="like" value="change">
               <i class="fas fa-heart icon-font" <?php if ($like['likedata']) : ?>style="color:#f1071a" <?php endif; ?>></i>
             </button>
-            <?php foreach ($likecounts as $likecount) {
-              if ($likecount['message_id'] == $post['id']) {
-                print('<span>' . ($likecount['count']) . '</span>');
-              }
-            }
+            <input type="hidden" name="msgid" value="<?php echo h($post['id']);?>">
+            </form>
+            <!--いいねカウント-->
+            <?php $likecount=isset($likecounts[$post['id']][0]['count'])?($likecounts[$post['id']][0]['count']):0;
+            echo($likecount);  
             ?>
           </p>
           <p class="day"><a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
