@@ -152,6 +152,11 @@ li {
 }
 
 .heart{
-	background-color:inherit;
+	background:none;
 	border:none;
+	outline: none;
+}
+
+.heart:focus{
+	outline:none;
 }

@@ -133,8 +133,8 @@ $likecounts=$likecounts->fetchall(PDO::FETCH_ASSOC|PDO::FETCH_GROUP);
             $like = $likes->fetch();
             ?>
             <!--いいねボタン-->
-            <form action="" formmethod="post">
-            <button formaction="" formmethod="post" class="heart" type="submit" name="like" value="change">
+            <form style="display:inline" class="likeform" action="" method="post">
+            <button class="heart" type="submit" name="like" value="change" style="outline:none">
               <i class="fas fa-heart icon-font" <?php if ($like['likedata']) : ?>style="color:#f1071a" <?php endif; ?>></i>
             </button>
             <input type="hidden" name="msgid" value="<?php echo h($post['id']);?>">
