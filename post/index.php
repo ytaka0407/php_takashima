@@ -2,6 +2,7 @@
 session_start();
 require('dbconnect.php');
 
+//ログインしているのかチェック
 if (isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()) {
   $_SESSION['time'] = time();
 
@@ -13,16 +14,17 @@ if (isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()) {
   exit;
 }
 
+//$_POSTになにか投稿されていたら、$_POST['message']の中身を確認
 if (!empty($_POST)) {
   if ($_POST['message'] != '') {
-    $posts = $db->prepare('INSERT INTO posts SET message=?, member_id=?, reply_post_id=?,created=NOW()');
-    $posts->execute(array($_POST['message'], $member['id'], $_POST['reply_post_id']));
+    $posts = $db->prepare('INSERT INTO posts SET message=?, member_id=?, reply_post_id=?, retweet_post_id=?, created=NOW()');
+    $posts->execute(array($_POST['message'], $member['id'], $_POST['reply_post_id'], $_POST['rt_post_id']));
     header('Location:index.php');
     exit;
   }
 }
 
-//返信の場合
+//返信の場合、投稿画面に返信元メッセージを表示する
 if (isset($_REQUEST['res'])) {
   $response = $db->prepare('SELECT m.name,m.picture,p.* FROM posts p, members m WHERE p.member_id=m.id AND p.id=? ORDER BY p.created DESC');
   $response->execute(array($_REQUEST['res']));
@@ -124,7 +126,7 @@ $likecounts=$likecounts->fetchall(PDO::FETCH_ASSOC|PDO::FETCH_GROUP);
         <div class="msg">
           <img src="member_picture/<?php echo h($post['picture']); ?>" height="48" width="48">
           <p class="msgtext"><?php echo makelink(h($post['message'])); ?><span class="name">(<?php echo h($post['name']); ?>)</span>[<a href="index.php?res=<?php echo h($post['id']); ?>">Re:</a>]
-            <!--いいねボタン部分-->
+          <!--いいねボタン部分-->
             <?php
             $likes = $db->prepare('SELECT COUNT(*) as likedata  FROM likeactions WHERE message_id=? AND member_id=? AND switch=TRUE');
             $likes->bindParam(1, $post['id'], PDO::PARAM_INT);
@@ -143,6 +145,14 @@ $likecounts=$likecounts->fetchall(PDO::FETCH_ASSOC|PDO::FETCH_GROUP);
             <?php $likecount=isset($likecounts[$post['id']][0]['count'])?($likecounts[$post['id']][0]['count']):0;
             echo($likecount);  
             ?>
+
+            <!--リツイート-->
+            <form style="display:inline" class="retweet" action="" method="post">
+            <input type="hidden" name="rt_post_id" value="<?php echo h($post['id']);?>">
+            <input type="hidden" name="message" value="<?php echo h($post['message'])?>">
+            <input type="submit" value="retweet">
+            </form>
+
           </p>
           <p class="day"><a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
             <?php if ($post['reply_post_id'] > 0) : ?>
