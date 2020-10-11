@@ -132,7 +132,9 @@ li {
 }
 
 .retweettext{
+	margin-left:30px;
 	border:solid #999 1px;
+	background-color:#ccecee;
 }
 
 .msg img {
