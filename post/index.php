@@ -88,15 +88,16 @@ if ($_POST['like'] == 'change') {
 //p1・m1は投稿情報
 //p2・m2はリツイート元の投稿及び投稿者の情報
 $posts = $db->prepare(
-'SELECT p1.id,p1.message,p1.member_id,p1.reply_post_id,p1.retweet_post_id,p1.retweeted_count,
+  'SELECT p1.id,p1.message,p1.member_id,p1.reply_post_id,p1.retweet_post_id,p1.retweeted_count,p1.created,
 m1.name,m1.picture,
-p2.id as ori_id,p2.member_id as ori_member_id,
+p2.id as ori_id,p2.member_id as ori_member_id,p2.created as ori_created,
 m2.name as ori_name,m2.picture as ori_picture
 FROM posts as p1
 LEFT JOIN members as m1 ON p1.member_id=m1.id 
 LEFT JOIN posts as p2 ON p1.retweet_post_id=p2.id
 LEFT JOIN members as m2 ON p2.member_id=m2.id
-ORDER BY p1.created DESC LIMIT ?,5');
+ORDER BY p1.created DESC LIMIT ?,5'
+);
 $posts->bindParam(1, $start, PDO::PARAM_INT);
 $posts->execute();
 
@@ -149,55 +150,58 @@ $like = $likes->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
               <img src="member_picture/<?php echo h($post['picture']); ?>" height="48" width="48"><?php echo h($post['name']); ?>さんがリツイートしました。
             </p>
             <p>
-            <div class="retweettext">
+              <div class="retweettext">
+                <p>
+                  <img src="member_picture/<?php echo h($post['ori_picture']); ?>" height="48" width="48"><?php echo h($post['ori_name']); ?>さんのツイート
+                </p>
+                <?php echo makelink(h($post['message'])); ?>
+                <div>
+                  <form style="display:inline" class="likeform" action="" method="post">
+                    <button class="heart" type="submit" name="like" value="change" style="outline:none">
+                      <i class="fas fa-heart icon-font" <?php if (isset($like[$post['retweet_post_id']])) : ?>style="color:#f1071a" <?php endif; ?>></i>
+                    </button>
+                    <input type="hidden" name="msgid" value="<?php echo h($post['retweet_post_id']); ?>">
+                  </form>
+                  <?php $likecount = isset($likecounts[$post['retweet_post_id']][0]['count']) ? ($likecounts[$post['retweet_post_id']][0]['count']) : 0;
+                  echo ($likecount); ?>
+                </div>
+                <p class="day"><a href="view.php?id=<?php echo h($post['retweet_post_id']); ?>"><?php echo h($post['ori_created']); ?></a></p>
+              </div>
+              <!--リツイートではない場合の表示-->
+            <?php else : ?>
               <p>
-              <img src="member_picture/<?php echo h($post['ori_picture']); ?>" height="48" width="48"><?php echo h($post['ori_name']); ?>さんのツイート
+                <img src="member_picture/<?php echo h($post['picture']); ?>" height="48" width="48">
               </p>
-              <?php echo makelink(h($post['message'])); ?>
+              <p class="msgtext"><?php echo makelink(h($post['message'])); ?><span class="name">(<?php echo h($post['name']); ?>)</span>[<a href="index.php?res=<?php echo h($post['id']); ?>">Re:</a>]
+
+              <?php endif; ?>
+              <!--いいねボタン部分-->
+              <!--いいねボタン-->
               <form style="display:inline" class="likeform" action="" method="post">
                 <button class="heart" type="submit" name="like" value="change" style="outline:none">
-                  <i class="fas fa-heart icon-font" <?php if (isset($like[$post['retweet_post_id']])) : ?>style="color:#f1071a" <?php endif; ?>></i>
+                  <i class="fas fa-heart icon-font" <?php if (isset($like[$post['id']])) : ?>style="color:#f1071a" <?php endif; ?>></i>
                 </button>
-                <input type="hidden" name="msgid" value="<?php echo h($post['retweet_post_id']); ?>">
+                <input type="hidden" name="msgid" value="<?php echo h($post['id']); ?>">
               </form>
-              <?php $likecount = isset($likecounts[$post['retweet_post_id']][0]['count']) ? ($likecounts[$post['retweet_post_id']][0]['count']) : 0;
-              echo ($likecount); ?>
-            </div>
-            <!--リツイートではない場合の表示-->
-          <?php else : ?>
-            <p>
-            <img src="member_picture/<?php echo h($post['picture']); ?>" height="48" width="48">
-            </p>
-            <p class="msgtext"><?php echo makelink(h($post['message'])); ?><span class="name">(<?php echo h($post['name']); ?>)</span>[<a href="index.php?res=<?php echo h($post['id']); ?>">Re:</a>]
-
-            <?php endif; ?>
-            <!--いいねボタン部分-->
-            <!--いいねボタン-->
-            <form style="display:inline" class="likeform" action="" method="post">
-              <button class="heart" type="submit" name="like" value="change" style="outline:none">
-                <i class="fas fa-heart icon-font" <?php if (isset($like[$post['id']])) : ?>style="color:#f1071a" <?php endif; ?>></i>
-              </button>
-              <input type="hidden" name="msgid" value="<?php echo h($post['id']); ?>">
-            </form>
-            <!--いいねカウント-->
-            <?php $likecount = isset($likecounts[$post['id']][0]['count']) ? ($likecounts[$post['id']][0]['count']) : 0;
-            echo ($likecount);
-            ?>
-            <!--リツイート-->
-            <form style="display:inline" class="retweet" action="" method="post">
-              <input type="hidden" name="rt_post_id" value="<?php echo h($post['id']); ?>">
-              <input type="hidden" name="message" value="<?php echo h($post['message']) ?>">
-              <input type="submit" value="retweet">
-            </form>
-            </p>
-            <p class="day"><a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
-              <?php if ($post['reply_post_id'] > 0) : ?>
-                <a href="view.php?id=<?php echo h($post['reply_post_id']); ?>">返信元のメッセージ</a>
-              <?php endif; ?>
-              <?php if ($_SESSION['id'] == $post['member_id']) : ?>
-                [<a href="delete.php?id=<?php echo h($post['id']); ?>" style="color:F33;">削除</a>]
-              <?php endif; ?>
-            </p>
+              <!--いいねカウント-->
+              <?php $likecount = isset($likecounts[$post['id']][0]['count']) ? ($likecounts[$post['id']][0]['count']) : 0;
+              echo ($likecount);
+              ?>
+              <!--リツイート-->
+              <form style="display:inline" class="retweet" action="" method="post">
+                <input type="hidden" name="rt_post_id" value="<?php echo h($post['id']); ?>">
+                <input type="hidden" name="message" value="<?php echo h($post['message']) ?>">
+                <input type="submit" value="retweet">
+              </form>
+              </p>
+              <p class="day"><a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
+                <?php if ($post['reply_post_id'] > 0) : ?>
+                  <a href="view.php?id=<?php echo h($post['reply_post_id']); ?>">返信元のメッセージ</a>
+                <?php endif; ?>
+                <?php if ($_SESSION['id'] == $post['member_id']) : ?>
+                  [<a href="delete.php?id=<?php echo h($post['id']); ?>" style="color:F33;">削除</a>]
+                <?php endif; ?>
+              </p>
         </div>
       <?php endforeach; ?>
       <ul class="paging">
