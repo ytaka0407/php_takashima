@@ -156,7 +156,7 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
         <dl>
           <dt><img src="member_picture/<?php echo h($member['picture']); ?>" height="48" width="48"><?php echo h($member['name']); ?>さん メッセージをどうぞ</dt>
           <dd><textarea name="message" cols="50" rows="5"><?php echo h($reply_message); ?></textarea>
-            <input type="hidden" name="reply_post_id" value="<?php h($_REQUEST['res']); ?>">
+            <input type="hidden" name="reply_post_id" value=<?php echo(h($_REQUEST['res'])); ?>>
           </dd>
         </dl>
         <input type="submit" value="投稿する">
@@ -217,7 +217,7 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
               ?>
               <!--リツイート-->
               <form class="retweet" action="" method="post">
-                <input type="hidden" name="rt_post_id" value="<?php echo h($post['id']); ?>">
+                <input type="hidden" name="rt_post_id" value="<?php echo h($post['retweet_post_id']); ?>">
                 <input type="hidden" name="message" value="<?php echo h($post['message']) ?>">
                 <input class="retweet_button" type="submit" value="retweet">
               </form>
