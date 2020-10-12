@@ -130,18 +130,7 @@ li {
 	border-top: 1px solid #ccc;
 	padding: 10px 0;
 }
-
-.retweettext{
-	margin-left:30px;
-	border:solid #999 1px;
-	background-color:#ccecee;
-}
-
-.msg img {
-	display:inline-block;
-	margin-right: 5px;
 	
-}
 .msg p {
 	margin: 0;
 }
@@ -149,20 +138,4 @@ li {
 .msg .day a {
 	font-size: 80%;
 	color: #999;
-}
-
-.icon-font{
-	font-size:0.8em;
-	color:#999;
-	border:solid,#333,1px;
-}
-
-.heart{
-	background:none;
-	border:none;
-	outline: none;
-}
-
-.heart:focus{
-	outline:none;
 }
