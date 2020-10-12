@@ -12,7 +12,7 @@ if (isset($_SESSION['id'])) {
     $message = $messages->fetch();
     //投稿者IDとログインIDの一致
     if ($message['member_id'] == $_SESSION['id']) {
-        $del = $db->prepare('DELETE FROM posts WHERE id=?');
+        $del = $db->prepare('UPDATE posts SET switch=0 WHERE id=?');
         $del->execute(array($id));
     }
 } else {
