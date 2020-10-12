@@ -84,24 +84,33 @@ if ($_POST['like'] == 'change') {
   }
 }
 
-//リツイート情報も合わせて取得
+//リツイート元情報も含めて取得
 //p1・m1は投稿情報
 //p2・m2はリツイート元の投稿及び投稿者の情報
 $posts = $db->prepare(
-  'SELECT p1.id,p1.message,p1.member_id,p1.reply_post_id,p1.retweet_post_id,p1.retweeted_count,p1.created,
-m1.name,m1.picture,
-p2.id as ori_id,p2.member_id as ori_member_id,p2.created as ori_created,
-m2.name as ori_name,m2.picture as ori_picture
-FROM posts as p1
-LEFT JOIN members as m1 ON p1.member_id=m1.id 
-LEFT JOIN posts as p2 ON p1.retweet_post_id=p2.id
-LEFT JOIN members as m2 ON p2.member_id=m2.id
-ORDER BY p1.created DESC LIMIT ?,5'
+  'SELECT p1.id,p1.message,p1.member_id,p1.reply_post_id,p1.retweet_post_id,p1.created,
+  m1.name,m1.picture,
+  p2.id as ori_id,p2.member_id as ori_member_id,p2.created as ori_created,
+  m2.name as ori_name,m2.picture as ori_picture
+  FROM posts as p1
+  LEFT JOIN members as m1 ON p1.member_id=m1.id 
+  LEFT JOIN posts as p2 ON p1.retweet_post_id=p2.id
+  LEFT JOIN members as m2 ON p2.member_id=m2.id
+  ORDER BY p1.created DESC LIMIT ?,5;'
 );
 $posts->bindParam(1, $start, PDO::PARAM_INT);
 $posts->execute();
+$posts=$posts->fetchall();
 
-//いいねカウント
+//表示する投稿のIDを取得（いいね・リツイートカウント時にデータを切り取るため）
+$getpost=array_column($posts,'id');
+
+//
+$getoripost=array_column($posts,'retweet_post_id');
+
+//表示する投稿のリツイート元投稿のIDを取得(元の投稿のカウントデータを切り取るため)
+
+//いいね回数カウント
 $likecounts = $db->query('SELECT message_id, COUNT(*) as count FROM likeactions WHERE switch=TRUE GROUP BY message_id');
 $likecounts = $likecounts->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
 
@@ -110,6 +119,19 @@ $likes = $db->prepare('SELECT message_id FROM likeactions WHERE member_id=? AND 
 $likes->bindParam(1, $member['id'], PDO::PARAM_INT);
 $likes->execute();
 $like = $likes->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
+
+
+//リツイート回数集計取得
+$countquery=$db->prepare('SELECT p1.id,COUNT(p2.retweet_post_id=p1.id) as retweetcount,p1.retweet_post_id,COUNT(p3.retweet_post_id=p1.retweet_post_id) as oritweetcount
+FROM posts as p1
+LEFT JOIN posts as p2 ON p1.id=p2.retweet_post_id 
+LEFT JOIN posts as p3 ON p1.retweet_post_id=p3.retweet_post_id
+WHERE p1.id BETWEEN ? AND ?
+GROUP BY p1.id;');
+$countquery->bindparam(1,$getpost[4], PDO::PARAM_INT);
+$countquery->bindParam(2,$getpost[0], PDO::PARAM_INT);
+$countquery->execute();
+$retweetcount=$countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
 
 ?>
 
@@ -122,6 +144,7 @@ $like = $likes->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>ひとこと掲示板</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="styleadd.css" />
   <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 </head>
 
@@ -132,7 +155,7 @@ $like = $likes->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
     </div>
     <div id="content">
       <div style="text-align:right"><a href="logout.php">ログアウト</a></div>
-      <form action="" method="post">
+      <form class="postform" action="" method="post">
         <dl>
           <dt><img src="member_picture/<?php echo h($member['picture']); ?>" height="48" width="48"><?php echo h($member['name']); ?>さん メッセージをどうぞ</dt>
           <dd><textarea name="message" cols="50" rows="5"><?php echo h($reply_message); ?></textarea>
@@ -164,6 +187,14 @@ $like = $likes->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
                   </form>
                   <?php $likecount = isset($likecounts[$post['retweet_post_id']][0]['count']) ? ($likecounts[$post['retweet_post_id']][0]['count']) : 0;
                   echo ($likecount); ?>
+                  <!--リツイートボタン-->
+              <form  class="retweet" action="" method="post">
+                <input type="hidden" name="rt_post_id" value="<?php echo h($post['retweet_post_id']); ?>">
+                <input type="hidden" name="message" value="<?php echo h($post['message']) ?>">
+                <input class="retweet_button" type="submit" value="retweet">
+              </form>
+              <!--元のツイートのリツイート回数表示-->
+              <?php echo(h($retweetcount[$post['id']][0]['oritweetcount']??0));?>
                 </div>
                 <p class="day"><a href="view.php?id=<?php echo h($post['retweet_post_id']); ?>"><?php echo h($post['ori_created']); ?></a></p>
               </div>
@@ -177,7 +208,7 @@ $like = $likes->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
               <?php endif; ?>
               <!--いいねボタン部分-->
               <!--いいねボタン-->
-              <form style="display:inline" class="likeform" action="" method="post">
+              <form class="likeform" action="" method="post">
                 <button class="heart" type="submit" name="like" value="change" style="outline:none">
                   <i class="fas fa-heart icon-font" <?php if (isset($like[$post['id']])) : ?>style="color:#f1071a" <?php endif; ?>></i>
                 </button>
@@ -188,11 +219,13 @@ $like = $likes->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
               echo ($likecount);
               ?>
               <!--リツイート-->
-              <form style="display:inline" class="retweet" action="" method="post">
+              <form class="retweet" action="" method="post">
                 <input type="hidden" name="rt_post_id" value="<?php echo h($post['id']); ?>">
                 <input type="hidden" name="message" value="<?php echo h($post['message']) ?>">
-                <input type="submit" value="retweet">
+                <input class="retweet_button" type="submit" value="retweet">
               </form>
+              <!--リツイート回数表示-->
+              <?php echo(h($retweetcount[$post['id']][0]['retweetcount']??0));?>
               </p>
               <p class="day"><a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
                 <?php if ($post['reply_post_id'] > 0) : ?>
