@@ -14,11 +14,18 @@ if (isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()) {
   exit;
 }
 
-//$_POSTになにか投稿されていたら、$_POST['message']の中身を確認
+//$_POSTになにか投稿されていたら、$_POST['message']の中身を確認して投稿。
 if (!empty($_POST)) {
   if ($_POST['message'] != '') {
+    //リツイートの場合
+
+
     $posts = $db->prepare('INSERT INTO posts SET message=?, member_id=?, reply_post_id=?, retweet_post_id=?, created=NOW()');
     $posts->execute(array($_POST['message'], $member['id'], $_POST['reply_post_id'], $_POST['rt_post_id']));
+
+
+
+
     header('Location:index.php');
     exit;
   }
@@ -96,6 +103,7 @@ $posts = $db->prepare(
   LEFT JOIN members as m1 ON p1.member_id=m1.id 
   LEFT JOIN posts as p2 ON p1.retweet_post_id=p2.id
   LEFT JOIN members as m2 ON p2.member_id=m2.id
+  WHERE p1.switch=1
   ORDER BY p1.created DESC LIMIT ?,5;'
 );
 $posts->bindParam(1, $start, PDO::PARAM_INT);
@@ -104,9 +112,6 @@ $posts=$posts->fetchall();
 
 //表示する投稿のIDを取得（いいね・リツイートカウント時にデータを切り取るため）
 $getpost=array_column($posts,'id');
-
-//
-$getoripost=array_column($posts,'retweet_post_id');
 
 //表示する投稿のリツイート元投稿のIDを取得(元の投稿のカウントデータを切り取るため)
 
