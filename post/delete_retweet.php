@@ -2,12 +2,22 @@
 session_start();
 require('dbconnect.php');
 
+//htmlspecialcharsショートカット
+function h($value)
+{
+    return htmlspecialchars($value, ENT_QUOTES);
+}
+
 //ログイン検査
 if (isset($_SESSION['id'])) {
     $id = $_REQUEST['id'];
 
     //投稿検査
-    $messages = $db->prepare('SELECT * FROM posts WHERE id=?');
+    $messages = $db->prepare('SELECT p1.id,p1.member_id,p1.message,p1.retweet_post_id,p2.member_id as ori_memberid,m.name as ori_membername,m.picture as ori_memberpicture
+    FROM posts as p1
+    LEFT JOIN posts as p2 ON p1.retweet_post_id=p2.id
+    LEFT JOIN members as m ON p2.member_id=m.id
+    WHERE p1.id=?');
     $messages->execute(array($id));
     $message = $messages->fetch();
     //投稿者IDとログインIDの一致
@@ -37,7 +47,13 @@ if (isset($_SESSION['id'])) {
         <div id="content">
             <p>リツイートを取消します。</p>
             <p>元のツイート</p>
-            <div class="msg"><?php echo htmlspecialchars($message['message'], ENT_QUOTES); ?></div>
+            <div class="msg">
+                <p><img src="member_picture/<?php echo (h($message['ori_memberpicture'])); ?>" height="48" width="48">
+                    <?php echo (h($message['ori_membername'])); ?>さん
+                </p>
+                <?php echo htmlspecialchars($message['message'], ENT_QUOTES); ?>
+            </div>
+
             <form action="delete_do.php" method="post">
                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($id, ENT_QUOTES); ?>"><br>
                 <input type="submit" name="delete" value="取り消す">
