@@ -200,7 +200,7 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
               <p>
                 <img src="member_picture/<?php echo h($post['picture']); ?>" height="48" width="48">
               </p>
-              <p class="msgtext"><?php echo makelink(h($post['message'])); ?><span class="name">(<?php echo h($post['name']); ?>)</span>[<a href="index.php?res=<?php echo h($post['id']); ?>">Re:</a>]
+              <p class="msgtext"><?php echo makelink(h($post['message'])); ?><span class="name">(<?php echo h($post['name']); ?>)</span>
 
               <?php endif; ?>
               <!--いいねボタン部分-->
@@ -223,6 +223,7 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
               </form>
               <!--リツイート回数表示-->
               <?php echo (h($retweetcount[$post['id']][0]['retweetcount'] ?? 0)); ?>
+              [<a href="index.php?res=<?php echo h($post['id']); ?>">Re:</a>]
               </p>
               <p class="day"><a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
                 <?php if ($post['reply_post_id'] > 0) : ?>
