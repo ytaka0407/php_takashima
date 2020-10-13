@@ -2,7 +2,7 @@
 session_start();
 require('dbconnect.php');
 
-if ($_COOKIE['email'] !='') {
+if (($_COOKIE['email']??'') !='') {
   $_POST['email'] = $_COOKIE['email'];
   $_POST['password'] = $_COOKIE['password'];
   $_POST['save'] = 'on';
@@ -59,10 +59,11 @@ if (!empty($_POST)) {
       <form action="" method="post" enctype="multipart/form-data">
         <dl>
           <dt>メールアドレス</dt>
-          <dd><input type="text" name="email" size="35" maxlength="255" value="<?php echo htmlspecialchars($_POST['email'], ENT_QUOTES); ?>"></dd>
+          <dd><input type="text" name="email" size="35" maxlength="255" value="<?php echo htmlspecialchars(($_POST['email']??''), ENT_QUOTES); ?>"></dd>
           <dt>パスワード</dt>
-          <dd><input type="password" name="password" size="10" maxlength="20" value="<?php echo htmlspecialchars($_POST['password'], ENT_QUOTES); ?>"></dd>
-          <?php if ($error['login'] == 'blank') : ?><p class="error">*メールアドレスとパスワードを入力して下さい。</p><?php elseif ($error['login'] == 'failed') : ?><p class="error">ログインに失敗しました。入力内容をご確認下さい。</p><?php endif; ?>
+          <dd><input type="password" name="password" size="10" maxlength="20" value="<?php echo htmlspecialchars(($_POST['password']??''), ENT_QUOTES); ?>"></dd>
+          <?php if (($error['login']??'') == 'blank') : ?><p class="error">*メールアドレスとパスワードを入力して下さい。
+          </p><?php elseif (($error['login']??'')== 'failed') : ?><p class="error">ログインに失敗しました。入力内容をご確認下さい。</p><?php endif; ?>
           <dt>ログイン状態の記録</dt>
           <dd><input type="checkbox" name="save" value="on"><label for="save">次回からは自動的にログインする</label></dd>
           <div><input type="submit" value="ログインする"></div>
