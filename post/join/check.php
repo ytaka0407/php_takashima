@@ -32,7 +32,7 @@ if(!empty($_POST)){
   </div>
   <div id="content">
 <p>次のフォームに必要事項をご記入下さい。</p>
-<form action="" method="post">
+<form action="check.php" method="post">
     <input type="hidden" name="action" value="submit">
 <dl>
 <dt>ニックネーム</dt>
@@ -42,7 +42,7 @@ if(!empty($_POST)){
 <dt>パスワード</dt>
 <dd>[表示されません]</dd>
 <dt>写真など</dt>
-<dd><?php if($_SESSION['join']['image']!=='dammy.jpg'):?><img src="../member_picture/<?php echo htmlspecialchars($_SESSION['join']['image'],ENT_QUOTES);?>" width="100" height="100"><?php endif;?></dd>
+<dd><?php if($_SESSION['join']['image']!=='dammy.jpg'):?><img src="../member_picture/<?php echo htmlspecialchars($_SESSION['join']['image'],ENT_QUOTES);?>" width="100" height="100" alt="<?php echo htmlspecialchars($_SESSION['join']['name'],ENT_QUOTES);?>の登録画像"><?php endif;?></dd>
 </dl>
 <div>><a href="index.php?action=rewrite">&laquo;&nbsp;書き直す</a>｜<input type="submit" value="登録する"></div>
 </form>

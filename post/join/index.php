@@ -88,35 +88,39 @@ if (($_REQUEST['action'] ?? '') == 'rewrite') {
     </div>
     <div id="content">
       <p>次のフォームに必要事項をご記入下さい。</p>
-      <form action="" method="post" enctype="multipart/form-data">
+      <form action="index.php" method="post" enctype="multipart/form-data">
         <dl>
           <dt>ニックネーム<span class="required">必須</span></dt>
-          <dd><input type="text" name="name" size="35" maxlength="255" value="<?php echo h($_POST['name']??''); ?>"></dd>
-          <?php if (($error['name']??'') == 'blank') : ?>
-            <p class="error">ニックネームを入力して下さい</p>
-          <?php endif; ?>
+          <dd><input type="text" name="name" size="35" maxlength="255" value="<?php echo h($_POST['name'] ?? ''); ?>">
+            <?php if (($error['name'] ?? '') == 'blank') : ?>
+              <p class="error">ニックネームを入力して下さい</p>
+            <?php endif; ?>
+          </dd>
           <dt>メールアドレス<span class="required">必須</span></dt>
-          <dd><input type="text" name="email" size="35" maxlength="255" value="<?php echo h($_POST['email']??''); ?>"></dd>
-          <?php if (($error['email']??'') == 'blank') : ?>
-            <p class="error">メールアドレスを入力して下さい</p>
-          <?php elseif (($error['email']??'') == 'duplicate') : ?>
-            <p class="error">指定されたメールアドレスは既に登録されています。</p>
-          <?php endif; ?>
+          <dd><input type="text" name="email" size="35" maxlength="255" value="<?php echo h($_POST['email'] ?? ''); ?>">
+            <?php if (($error['email'] ?? '') == 'blank') : ?>
+              <p class="error">メールアドレスを入力して下さい</p>
+            <?php elseif (($error['email'] ?? '') == 'duplicate') : ?>
+              <p class="error">指定されたメールアドレスは既に登録されています。</p>
+            <?php endif; ?>
+          </dd>
           <dt>パスワード<span class="required">必須</span></dt>
-          <dd><input type="password" name="password" size="10" maxlength="20" value="<?php echo h($_POST['password']??''); ?>"></dd>
-          <?php if (($error['password']??'') == 'blank') : ?>
-            <p class="error">パスワードを入力して下さい</p>
-          <?php elseif (($error['password']??'') == 'length') : ?>
-            <p class="error">パスワードは４文字以上で入力して下さい。</p>
-          <?php endif; ?>
+          <dd><input type="password" name="password" size="10" maxlength="20" value="<?php echo h($_POST['password'] ?? ''); ?>">
+            <?php if (($error['password'] ?? '') == 'blank') : ?>
+              <p class="error">パスワードを入力して下さい</p>
+            <?php elseif (($error['password'] ?? '') == 'length') : ?>
+              <p class="error">パスワードは４文字以上で入力して下さい。</p>
+            <?php endif; ?>
+          </dd>
           <dt>写真など</dt>
-          <dd><input type="file" name="image" size="35"></dd>
-          <?php if (($error['image']??'') == 'type') : ?>
-            <p class="error">画像は拡張子が.jpgか.JPGか.gifのファイルを指定して下さい。</p>
-          <?php endif; ?>
-          <?php if (!empty($error)) : ?>
-            <p class="error">恐れ入りますが、画像を改めて指定して下さい</p>
-          <?php endif; ?>
+          <dd><input type="file" name="image" size="35">
+            <?php if (($error['image'] ?? '') == 'type') : ?>
+              <p class="error">画像は拡張子が.jpgか.JPGか.gifのファイルを指定して下さい。</p>
+            <?php endif; ?>
+            <?php if (!empty($error)) : ?>
+              <p class="error">恐れ入りますが、画像を改めて指定して下さい</p>
+            <?php endif; ?>
+          </dd>
         </dl>
         <div><input type="submit" value="入力内容を確認する"></div>
       </form>

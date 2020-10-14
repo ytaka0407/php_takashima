@@ -154,7 +154,7 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
       <div style="text-align:right"><a href="logout.php">ログアウト</a></div>
       <form class="postform" action="index.php" method="post">
         <dl>
-          <dt><img src="member_picture/<?php echo h($member['picture']); ?>" height="48" width="48" alt="ログインしているユーザーのプロフィール画像"><?php echo h($member['name']); ?>さん メッセージをどうぞ</dt>
+          <dt><img src="member_picture/<?php echo h($member['picture']); ?>" height="48" width="48" alt="<?php echo h($member['name']); ?>"><?php echo h($member['name']); ?>さん メッセージをどうぞ</dt>
           <dd><textarea name="message" cols="50" rows="5"><?php echo h(($reply_message ?? '')); ?></textarea>
             <input type="hidden" name="reply_post_id" value=<?php echo (h(($_REQUEST['res'] ?? ''))); ?>>
           </dd>
@@ -167,11 +167,11 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
           <!--リツイートの場合の表示-->
           <?php if ($post['retweet_post_id']) : ?>
             <p>
-              <img src="member_picture/<?php echo h($post['picture']); ?>" height="48" width="48" alt="投稿者のプロフィール画像"><?php echo h($post['name']); ?>さんがリツイートしました。
+              <img src="member_picture/<?php echo h($post['picture']); ?>" height="48" width="48" alt="<?php echo h($post['name']); ?>"><?php echo h($post['name']); ?>さんがリツイートしました。
             </p>
             <div class="retweettext">
               <p>
-                <img src="member_picture/<?php echo h($post['ori_picture']); ?>" height="48" width="48" alt="リツイート元の投稿者のプロフィール画像"><?php echo h($post['ori_name']); ?>さんのツイート
+                <img src="member_picture/<?php echo h($post['ori_picture']); ?>" height="48" width="48" alt="<?php echo h($post['ori_name']); ?>"><?php echo h($post['ori_name']); ?>さんのツイート
               </p>
               <?php echo makelink(h($post['message'])); ?>
               <div>
@@ -197,7 +197,7 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
             <!--リツイートではない場合の表示-->
           <?php else : ?>
             <p>
-              <img src="member_picture/<?php echo h($post['picture']); ?>" height="48" width="48" alt="投稿者のプロフィール画像">
+              <img src="member_picture/<?php echo h($post['picture']); ?>" height="48" width="48" alt=<?php echo h($post['name']); ?>">
             </p>
             <p class="msgtext"><?php echo makelink(h($post['message'])); ?><span class="name">(<?php echo h($post['name']); ?>)</span>
 
