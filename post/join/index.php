@@ -128,5 +128,4 @@ if (($_REQUEST['action'] ?? '') == 'rewrite') {
 
   </div>
 </body>
-
 </html>
