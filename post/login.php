@@ -18,7 +18,7 @@ if (!empty($_POST)) {
     $member = $login->fetch();
 
     if ($member) {
-      if ($_POST['save'] == 'on') {
+      if (($_POST['save']??'') == 'on') {
         setcookie('email', $_POST['email'], time() + 60 * 60 * 24 * 14);
         setcookie('password', $_POST['password'], time() + 60 * 60 * 24 * 14);
       }
@@ -55,7 +55,7 @@ if (!empty($_POST)) {
       <div id="lead"></div>
       <p>メールアドレスとパスワードを記入してログインしてください。</p>
       <p>入会手続きがまだの方はこちらからどうぞ</p>
-      <p>&raquo;<a href="../join/index.php">入会手続きをする</a></p>
+      <p>&raquo;<a href="join/index.php">入会手続きをする</a></p>
       <form action="" method="post" enctype="multipart/form-data">
         <dl>
           <dt>メールアドレス</dt>

@@ -1,6 +1,18 @@
 <?php session_start();
 require('../dbconnect.php');
 
+//htmlspecialcharsショートカット(未定義エラー回避含む)
+function h($value)
+{
+  return htmlspecialchars($value, ENT_QUOTES);
+}
+
+//未定義エラー回避ファンクション
+function n($value)
+{
+  return ($value ?? '');
+}
+
 if (!empty($_POST)) {
   //エラー確認
   //名前が入っているか確認
@@ -51,7 +63,7 @@ if (!empty($_POST)) {
   }
 }
 
-if ($_REQUEST['action'] == 'rewrite') {
+if (($_REQUEST['action'] ?? '') == 'rewrite') {
   $_POST = $_SESSION['join'];
   $error['rewrite'] = 'true';
 }
@@ -79,27 +91,27 @@ if ($_REQUEST['action'] == 'rewrite') {
       <form action="" method="post" enctype="multipart/form-data">
         <dl>
           <dt>ニックネーム<span class="required">必須</span></dt>
-          <dd><input type="text" name="name" size="35" maxlength="255" value="<?php echo htmlspecialchars($_POST['name'], ENT_QUOTES); ?>"></dd>
-          <?php if ($error['name'] == 'blank') : ?>
+          <dd><input type="text" name="name" size="35" maxlength="255" value="<?php echo h($_POST['name']??''); ?>"></dd>
+          <?php if (($error['name']??'') == 'blank') : ?>
             <p class="error">ニックネームを入力して下さい</p>
           <?php endif; ?>
           <dt>メールアドレス<span class="required">必須</span></dt>
-          <dd><input type="text" name="email" size="35" maxlength="255" value="<?php echo htmlspecialchars($_POST['email'], ENT_QUOTES); ?>"></dd>
-          <?php if ($error['email'] == 'blank') : ?>
+          <dd><input type="text" name="email" size="35" maxlength="255" value="<?php echo h($_POST['email']??''); ?>"></dd>
+          <?php if (($error['email']??'') == 'blank') : ?>
             <p class="error">メールアドレスを入力して下さい</p>
-          <?php elseif ($error['email'] == 'duplicate') : ?>
+          <?php elseif (($error['email']??'') == 'duplicate') : ?>
             <p class="error">指定されたメールアドレスは既に登録されています。</p>
           <?php endif; ?>
           <dt>パスワード<span class="required">必須</span></dt>
-          <dd><input type="password" name="password" size="10" maxlength="20" value="<?php echo htmlspecialchars($_POST['password'], ENT_QUOTES); ?>"></dd>
-          <?php if ($error['password'] == 'blank') : ?>
+          <dd><input type="password" name="password" size="10" maxlength="20" value="<?php echo h($_POST['password']??''); ?>"></dd>
+          <?php if (($error['password']??'') == 'blank') : ?>
             <p class="error">パスワードを入力して下さい</p>
-          <?php elseif ($error['password'] == 'length') : ?>
+          <?php elseif (($error['password']??'') == 'length') : ?>
             <p class="error">パスワードは４文字以上で入力して下さい。</p>
           <?php endif; ?>
           <dt>写真など</dt>
           <dd><input type="file" name="image" size="35"></dd>
-          <?php if ($error['image'] == 'type') : ?>
+          <?php if (($error['image']??'') == 'type') : ?>
             <p class="error">画像は拡張子が.jpgか.JPGか.gifのファイルを指定して下さい。</p>
           <?php endif; ?>
           <?php if (!empty($error)) : ?>
