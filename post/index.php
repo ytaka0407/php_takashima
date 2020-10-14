@@ -74,7 +74,7 @@ if (($_POST['like'] ?? '') == 'change') {
     $newaction->execute();
   } else {
     //取得データのswitchが0の場合は1、そうでなければ0にUPDATE
-    $switch=($result['switch']==0) ? 1 : 0;
+    $switch = ($result['switch'] == 0) ? 1 : 0;
     $change = $db->prepare('UPDATE likeactions SET switch=? WHERE id=?');
     $change->bindParam(1, $switch, PDO::PARAM_INT);
     $change->bindParam(2, $result['id'], PDO::PARAM_INT);
@@ -202,28 +202,27 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
               </p>
               <p class="msgtext"><?php echo makelink(h($post['message'])); ?><span class="name">(<?php echo h($post['name']); ?>)</span>
 
-              <?php endif; ?>
-              <!--いいねボタン部分-->
-              <!--いいねボタン-->
-              <form class="likeform" action="" method="post">
-                <button class="heart" type="submit" name="like" value="change" style="outline:none">
-                  <i class="fas fa-heart icon-font" <?php if (isset($like[$post['id']])) : ?>style="color:#f1071a" <?php endif; ?>></i>
-                </button>
-                <input type="hidden" name="msgid" value="<?php echo h($post['id']); ?>">
-              </form>
-              <!--いいねカウント-->
-              <?php $likecount = isset($likecounts[$post['id']][0]['count']) ? ($likecounts[$post['id']][0]['count']) : 0;
-              echo ($likecount);
-              ?>
-              <!--リツイート-->
-              <form class="retweet" action="" method="post">
-                <input type="hidden" name="rt_post_id" value="<?php echo h($post['id']); ?>">
-                <input type="hidden" name="message" value="<?php echo h($post['message']) ?>">
-                <input class="retweet_button" type="submit" value="retweet">
-              </form>
-              <!--リツイート回数表示-->
-              <?php echo (h($retweetcount[$post['id']][0]['retweetcount'] ?? 0)); ?>
-              [<a href="index.php?res=<?php echo h($post['id']); ?>">Re:</a>]
+                <!--いいねボタン部分-->
+                <!--いいねボタン-->
+                <form class="likeform" action="" method="post">
+                  <button class="heart" type="submit" name="like" value="change" style="outline:none">
+                    <i class="fas fa-heart icon-font" <?php if (isset($like[$post['id']])) : ?>style="color:#f1071a" <?php endif; ?>></i>
+                  </button>
+                  <input type="hidden" name="msgid" value="<?php echo h($post['id']); ?>">
+                </form>
+                <!--いいねカウント-->
+                <?php $likecount = isset($likecounts[$post['id']][0]['count']) ? ($likecounts[$post['id']][0]['count']) : 0;
+                echo ($likecount);
+                ?>
+                <!--リツイート-->
+                <form class="retweet" action="" method="post">
+                  <input type="hidden" name="rt_post_id" value="<?php echo h($post['id']); ?>">
+                  <input type="hidden" name="message" value="<?php echo h($post['message']) ?>">
+                  <input class="retweet_button" type="submit" value="retweet">
+                </form>
+                <!--リツイート回数表示-->
+                <?php echo (h($retweetcount[$post['id']][0]['retweetcount'] ?? 0)); ?>
+                [<a href="index.php?res=<?php echo h($post['id']); ?>">Re:</a>]
               </p>
               <p class="day"><a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
                 <?php if (($post['reply_post_id'] ?? 0) > 0) : ?>
@@ -237,6 +236,7 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
                   <?php endif; ?>
                 <?php endif; ?>
               </p>
+            <?php endif; ?>
         </div>
       <?php endforeach; ?>
       <ul class="paging">
