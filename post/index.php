@@ -224,7 +224,7 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
               [<a href="index.php?res=<?php echo h($post['id']); ?>">Re:</a>]
             </p>
           <?php endif; ?>
-          <p class="day"><a href="view.php?id=<?php echo h($post['id']); ?>"><?php echo h($post['created']); ?></a>
+          <p class="day"><a href="view.php?id=<?php echo h($post['id']); ?>&rtid=<?php echo h(($post['retweet_post_id']??'')); ?>"><?php echo h($post['created']); ?></a>
             <?php if (($post['reply_post_id'] ?? 0) > 0) : ?>
               <a href="view.php?id=<?php echo h($post['reply_post_id']); ?>">返信元のメッセージ</a>
             <?php endif; ?>

@@ -6,12 +6,20 @@ if (empty($_REQUEST['id'])) {
     exit;
 }
 
-$posts = $db->prepare('SELECT m.name,m.picture,p.* FROM members m,posts p WHERE p.id=? AND m.id=p.member_id');
+$posts = $db->prepare('SELECT m.name,m.picture,p.id,p.message,p.created,p.member_id FROM members m,posts p WHERE p.id=? AND m.id=p.member_id');
 $posts->execute(array($_REQUEST['id']));
 
+if (($_REQUEST['rtid'] ?? '')) {
+    $ori_posts = $db->prepare('SELECT m.name,m.picture,p.id,p.message,p.created,p.member_id FROM members m,posts p WHERE p.id=? AND m.id=p.member_id');
+    $ori_posts->execute(array($_REQUEST['rtid']));
+    $ori_post = ($ori_posts->fetch() ?? '');
+}
+
+
 //htmlspecialcharsショートカット
-function h($value){
-  return htmlspecialchars($value,ENT_QUOTES);
+function h($value)
+{
+    return htmlspecialchars($value, ENT_QUOTES);
 }
 
 ?>
@@ -25,6 +33,7 @@ function h($value){
     <title>ひとこと掲示板</title>
 
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="styleadd.css" />
 </head>
 
 <body>
@@ -32,16 +41,28 @@ function h($value){
         <div id="head">
             <h1>ひとこと掲示板</h1>
         </div>
-        <div id="content"> 
-        <p><a href="index.php">一覧に戻る</a></p>
-            <?php if ($post=$posts->fetch()):?>
+        <div id="content">
+            <p><a href="index.php">一覧に戻る</a></p>
+            <?php if ($post = $posts->fetch()) : ?>
                 <div class="msg">
-                    <img src="member_picture/<?php echo h($post['picture']); ?>" width="48" height="48" alt="<?php echo h($post['name']); ?>">
+                    <img src="member_picture/<?php echo h($post['picture']); ?>" width="48" height="48" alt="<?php echo h($post['name']); ?>"><?php echo h($post['name']); ?>さん
+                    <?php if ($ori_post ?? FALSE) : ?>がリツイート
+                    <div class="retweettext">
+                        <p><img src="member_picture/<?php echo h($ori_post['picture']); ?>" width="48" height="48" alt="<?php echo h($ori_post['name']); ?>"><?php echo h($ori_post['name']); ?>さん</p>
+                        <p><?php echo h($ori_post['message']); ?></p>
+                        <p><span class="day"><?php echo h($ori_post['created']); ?></span></p>
+                    </div>
+                <?php else : ?>
                     <p><?php echo h($post['message']); ?><span class="name">(<?php echo h($post['name']); ?>)</span></p>
                     <p><span class="day"><?php echo h($post['created']); ?></span></p>
                     <?php if ($_SESSION['id'] == $post['member_id']) : ?>
-              [<a href="delete.php?id=<?php echo h($post['id']); ?>" style="color:F33;">削除</a>]
-            <?php endif; ?>
+                        <?php if (($ori_post ?? FALSE)) : ?>
+                            [<a href="delete_retweet.php?id=<?php echo h($ori_post['id']); ?>">リツイート取消</a>]
+                        <?php else : ?>
+                            [<a href="delete.php?id=<?php echo h($post['id']); ?>">削除</a>]
+                        <?php endif; ?>
+                    <?php endif; ?>
+                <?php endif; ?>
                 </div>
             <?php else : ?>
                 <p>その投稿は削除されたか、URLが間違えています。</p>
