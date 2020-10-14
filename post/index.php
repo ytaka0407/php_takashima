@@ -92,7 +92,7 @@ $posts = $db->prepare(
   p2.id as ori_id,p2.member_id as ori_member_id,p2.created as ori_created,
   m2.name as ori_name,m2.picture as ori_picture
   FROM posts as p1
-  LEFT JOIN members as m1 ON p1.member_id=m1.id 
+  LEFT JOIN members as m1 ON p1.member_id=m1.id
   LEFT JOIN posts as p2 ON p1.retweet_post_id=p2.id
   LEFT JOIN members as m2 ON p2.member_id=m2.id
   WHERE p1.switch=1
@@ -122,7 +122,7 @@ $like = $likes->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
 //表示する投稿IDにしぼりその投稿IDのリツイート集計結果・リツイート元のリツイート集計結果を取得
 $countquery = $db->prepare('SELECT p1.id,COUNT(p2.retweet_post_id=p1.id) as retweetcount,p1.retweet_post_id,COUNT(p3.retweet_post_id=p1.retweet_post_id) as oritweetcount
 FROM posts as p1
-LEFT JOIN posts as p2 ON p1.id=p2.retweet_post_id 
+LEFT JOIN posts as p2 ON p1.id=p2.retweet_post_id
 LEFT JOIN posts as p3 ON p1.retweet_post_id=p3.retweet_post_id
 WHERE p1.switch=1 AND p1.id BETWEEN ? AND ? AND p1.switch=1
 GROUP BY p1.id;');
