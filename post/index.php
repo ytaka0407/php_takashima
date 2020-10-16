@@ -59,29 +59,6 @@ $page = min($page, $maxpage);
 $start = ($page - 1) * 5;
 
 
-//新規にいいねされた時には情報をデータベースに追加。2回め以降の場合はいいねのswitchを切り替え
-if (($_POST['like'] ?? '') == 'change') {
-  $check = $db->prepare('SELECT COUNT(*) as count,id, switch FROM likeactions WHERE member_id=? AND message_id=?');
-  $check->bindParam(1, $member['id'], PDO::PARAM_INT);
-  $check->bindParam(2, $_POST['msgid'], PDO::PARAM_INT);
-  $check->execute();
-  $result = $check->fetch();
-
-  if (!$result['count']) {
-    $newaction = $db->prepare('INSERT INTO likeactions SET member_id=?,message_id=?,switch=1,created=NOW()');
-    $newaction->bindParam(1, $member['id'], PDO::PARAM_INT);
-    $newaction->bindParam(2, $_POST['msgid'], PDO::PARAM_INT);
-    $newaction->execute();
-  } else {
-    //取得データのswitchが0の場合は1、そうでなければ0にUPDATE
-    $switch = ($result['switch'] == 0) ? 1 : 0;
-    $changeaction = $db->prepare('UPDATE likeactions SET switch=? WHERE id=?');
-    $changeaction->bindParam(1, $switch, PDO::PARAM_INT);
-    $changeaction->bindParam(2, $result['id'], PDO::PARAM_INT);
-    $changeaction->execute();
-  }
-}
-
 //リツイート元情報も含めて取得
 //p1・m1は投稿情報
 //p2・m2はリツイート元の投稿及び投稿者の情報
@@ -203,11 +180,12 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
 
               <!--いいねボタン部分-->
               <!--いいねボタン-->
-              <form class="likeform" action="index.php" method="post">
+              <form class="likeform" action="likeaction.php" method="post">
                 <button class="heart" type="submit" name="like" value="change" style="outline:none">
                   <i class="fas fa-heart icon-font" <?php if (isset($like[$post['id']])) : ?>style="color:#f1071a" <?php endif; ?>></i>
                 </button>
                 <input type="hidden" name="msgid" value="<?php echo h($post['id']); ?>">
+                <input type="hidden" name="id" value="<?php echo h($member['id']); ?>">
               </form>
               <!--いいねカウント-->
               <?php $likecount = isset($likecounts[$post['id']][0]['count']) ? ($likecounts[$post['id']][0]['count']) : 0;
