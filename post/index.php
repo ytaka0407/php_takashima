@@ -152,11 +152,12 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
               </p>
               <?php echo makelink(h($post['message'])); ?>
               <div>
-                <form style="display:inline" class="likeform" action="index.php" method="post">
+                <form style="display:inline" class="likeform" action="likeaction.php" method="post">
                   <button class="heart" type="submit" name="like" value="change" style="outline:none">
                     <i class="fas fa-heart icon-font" <?php if (isset($like[$post['retweet_post_id']])) : ?>style="color:#f1071a" <?php endif; ?>></i>
                   </button>
                   <input type="hidden" name="msgid" value="<?php echo h($post['retweet_post_id']); ?>">
+                  <input type="hidden" name="id" value="<?php echo h($member['id']); ?>">
                 </form>
                 <?php $likecount = isset($likecounts[$post['retweet_post_id']][0]['count']) ? ($likecounts[$post['retweet_post_id']][0]['count']) : 0;
                 echo ($likecount); ?>
