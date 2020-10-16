@@ -22,7 +22,7 @@ if(!empty($_POST)){
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>ひとこと掲示板</title>
 
-	<link rel="stylesheet" href="../style.css" />
+	<link rel="stylesheet" href="../stylesheets/style.css" />
 </head>
 
 <body>

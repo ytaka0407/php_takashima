@@ -140,8 +140,8 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>ひとこと掲示板</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="styleadd.css" />
+  <link rel="stylesheet" href="stylesheets/style.css" />
+  <link rel="stylesheet" href="stylesheets/styleadd.css" />
   <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 </head>
 

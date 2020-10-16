@@ -32,8 +32,8 @@ function h($value)
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ひとこと掲示板</title>
 
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="styleadd.css" />
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link rel="stylesheet" href="stylesheets/styleadd.css" />
 </head>
 
 <body>
