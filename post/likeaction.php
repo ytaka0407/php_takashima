@@ -13,13 +13,22 @@ exit;
 $member['id']=$_SESSION['id'];
 
 //いいねに入っているidがログインユーザーのIDと一致していなければ一覧画面へ戻る。
-if (!$_POST['id']===$member['id']) {
+if (!($_POST['id']??'')===$member['id']) {
+    header('Location:index.php');
+    exit;
+}
+
+//POST内容チェック
+//配列キーmsgid,idが数値、配列キーlikeがchangeの場合のみSQL文実行。idについては上で実質チェック済み
+//likeの中身も下でチェックするので
+//msgidのみチェック実施
+if (!is_numeric(($_POST['msgid']??''))){
     header('Location:index.php');
     exit;
 }
 
 //新規にいいねされた時には情報をデータベースに追加。2回め以降の場合はいいねのswitchを切り替え
-if (($_POST['like'] ?? '') == 'change') {
+if (($_POST['like'] ?? '') === 'change') {
   $check = $db->prepare('SELECT COUNT(*) as count,id, switch FROM likeactions WHERE member_id=? AND message_id=?');
   $check->bindParam(1, $member['id'], PDO::PARAM_INT);
   $check->bindParam(2, $_POST['msgid'], PDO::PARAM_INT);
