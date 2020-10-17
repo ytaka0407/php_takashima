@@ -19,7 +19,7 @@ if (!($_POST['id']??'')===$member['id']) {
 }
 
 //POST内容チェック
-//配列キーmsgid,idが数値、配列キーlikeがchangeの場合のみSQL文実行。idについては上で実質チェック済み
+//配列キーmsgid,idが数値、配列キーlikeがchangeの場合のみSQL文実行。idについては上でチェック済み
 //likeの中身も下でチェックするので
 //msgidのみチェック実施
 if (!is_numeric(($_POST['msgid']??''))){

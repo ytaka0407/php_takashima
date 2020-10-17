@@ -1,7 +1,14 @@
 <?php session_start();
 require('dbconnect.php');
 
-if (empty($_REQUEST['id'])) {
+//idは必須・数字限定
+if (empty($_REQUEST['id'])||(!is_numeric($_REQUEST['id']))) {
+    header('Location:index.php');
+    exit;
+}
+
+//rtidは空欄のままもしくは数字限定
+if (!empty($_REQUEST['rtid'])&&(!is_numeric($_REQUEST['rtid']))) {
     header('Location:index.php');
     exit;
 }
@@ -14,7 +21,6 @@ if (($_REQUEST['rtid'] ?? '')) {
     $ori_posts->execute(array($_REQUEST['rtid']));
     $ori_post = ($ori_posts->fetch() ?? '');
 }
-
 
 //htmlspecialcharsショートカット
 function h($value)
