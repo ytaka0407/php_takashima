@@ -51,4 +51,3 @@ if (($_POST['like'] ?? '') === 'change') {
 }
 header("Location:index.php");
 exit;
-?>
