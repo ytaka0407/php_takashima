@@ -69,11 +69,6 @@ $posts->bindParam(1, $start, PDO::PARAM_INT);
 $posts->execute();
 $posts = $posts->fetchall();
 
-//表示する投稿のIDを取得（いいね・リツイートカウント時にデータを切り取るため）
-$getpost = array_column($posts, 'id');
-
-//表示する投稿のリツイート元投稿のIDを取得(元の投稿のカウントデータを切り取るため)
-
 //いいね回数カウント
 $likecounts = $db->query('SELECT message_id, COUNT(*) as count FROM likeactions WHERE switch=TRUE GROUP BY message_id');
 $likecounts = $likecounts->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
@@ -84,17 +79,9 @@ $likes->bindParam(1, $member['id'], PDO::PARAM_INT);
 $likes->execute();
 $like = $likes->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
 
-
-//リツイート回数集計取得
-//表示する投稿IDにしぼりその投稿IDのリツイート集計結果・リツイート元のリツイート集計結果を取得
-$countquery = $db->prepare('SELECT p1.id,COUNT(p2.retweet_post_id=p1.id) as retweetcount,p1.retweet_post_id,COUNT(p3.retweet_post_id=p1.retweet_post_id) as oritweetcount
-FROM posts as p1
-LEFT JOIN posts as p2 ON p1.id=p2.retweet_post_id
-LEFT JOIN posts as p3 ON p1.retweet_post_id=p3.retweet_post_id
-WHERE p1.switch=1 AND p1.id BETWEEN ? AND ? AND p1.switch=1
-GROUP BY p1.id;');
-$countquery->bindparam(1, $getpost[4], PDO::PARAM_INT);
-$countquery->bindParam(2, $getpost[0], PDO::PARAM_INT);
+//IDごとにリツイート回数集計取得
+$countquery=$db->prepare(
+'SELECT retweet_post_id as id, count(*) as retweetcount FROM posts WHERE switch=1 GROUP BY retweet_post_id');
 $countquery->execute();
 $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
 ?>
@@ -159,7 +146,7 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
                                     <input class="retweet_button" type="submit" value="retweet">
                                 </form>
                                 <!--元のツイートのリツイート回数表示-->
-                                <?php echo (h($retweetcount[$post['id']][0]['oritweetcount'] ?? 0)); ?>
+                                <?php echo (h($retweetcount[$post['retweet_post_id']][0]['retweetcount'] ?? 0)); ?>
                             </div>
                             <p class="day"><a href="view.php?id=<?php echo h($post['retweet_post_id']); ?>"><?php echo h($post['ori_created']); ?></a></p>
                         </div>
