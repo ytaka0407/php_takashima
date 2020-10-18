@@ -13,9 +13,11 @@ if (!empty($_REQUEST['rtid']) && (!is_numeric($_REQUEST['rtid']))) {
     exit;
 }
 
+//投稿の情報を取得
 $posts = $db->prepare('SELECT m.name,m.picture,p.id,p.message,p.created,p.member_id FROM members m,posts p WHERE p.id=? AND m.id=p.member_id');
 $posts->execute(array($_REQUEST['id']));
 
+//リツイート元の投稿の情報を取得
 if (($_REQUEST['rtid'] ?? '')) {
     $ori_posts = $db->prepare('SELECT m.name,m.picture,p.id,p.message,p.created,p.member_id FROM members m,posts p WHERE p.id=? AND m.id=p.member_id');
     $ori_posts->execute(array($_REQUEST['rtid']));
@@ -61,14 +63,17 @@ function h($value)
                 <?php else : ?>
                     <p><?php echo h($post['message']); ?><span class="name">(<?php echo h($post['name']); ?>)</span></p>
                     <p><span class="day"><?php echo h($post['created']); ?></span></p>
-                    <?php if ($_SESSION['id'] === $post['member_id']) : ?>
-                        <?php if (($ori_post ?? FALSE)) : ?>
-                            [<a href="delete_retweet.php?id=<?php echo h($ori_post['id']); ?>">リツイート取消</a>]
-                        <?php else : ?>
-                            [<a href="delete.php?id=<?php echo h($post['id']); ?>">削除</a>]
-                        <?php endif; ?>
+                <?php endif; ?>
+                <!--もし投稿メンバー=ログインメンバーの場合、削除かリツイート取り消しか分岐して表示-->
+                <p  class="day">
+                <?php if ($_SESSION['id'] === $post['member_id']) : ?>
+                    <?php if (($ori_post ?? FALSE)) : ?>
+                        [<a href="delete_retweet.php?id=<?php echo h($post['id']); ?>">リツイート取消</a>]
+                    <?php else : ?>
+                        [<a href="delete.php?id=<?php echo h($post['id']); ?>">削除</a>]
                     <?php endif; ?>
                 <?php endif; ?>
+                </p>
                 </div>
             <?php else : ?>
                 <p>その投稿は削除されたか、URLが間違えています。</p>
