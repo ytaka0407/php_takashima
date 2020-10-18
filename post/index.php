@@ -80,8 +80,9 @@ $likes->execute();
 $like = $likes->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
 
 //IDごとのリツイート回数集計取得
-$countquery=$db->prepare(
-'SELECT retweet_post_id as id, count(*) as retweetcount FROM posts WHERE switch=1 GROUP BY retweet_post_id');
+$countquery = $db->prepare(
+    'SELECT retweet_post_id as id, count(*) as retweetcount FROM posts WHERE switch=1 GROUP BY retweet_post_id'
+);
 $countquery->execute();
 $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
 ?>

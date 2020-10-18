@@ -1,43 +1,42 @@
-.retweettext{
-	margin-left:30px;
-	border:solid #999 1px;
-	background-color:#ccecee;
+.retweettext {
+    margin-left: 30px;
+    border: solid #999 1px;
+    background-color: #ccecee;
 }
 
 .msg img {
-	display:inline-block;
-	margin-right: 5px;
-
+    display: inline-block;
+    margin-right: 5px;
 }
 
-.likeform{
-	display:inline;
+.likeform {
+    display: inline;
 }
 
-.icon-font{
-	font-size:0.8em;
-	color:#999;
-	border:solid,#333,1px;
+.icon-font {
+    font-size: 0.8em;
+    color: #999;
+    border: solid, #333, 1px;
 }
 
-.heart{
-	background:none;
-	border:none;
-	outline: none;
+.heart {
+    background: none;
+    border: none;
+    outline: none;
 }
 
-.heart:focus{
-	outline:none;
+.heart:focus {
+    outline: none;
 }
 
-.retweet{
-	display:inline-block;
+.retweet {
+    display: inline-block;
 }
 
-.retweet_button{
-	display:inline;
-	border:none;
-	outline:none;
-	background-color:inherit;
-	font-size:18px;
+.retweet_button {
+    display: inline;
+    border: none;
+    outline: none;
+    background-color: inherit;
+    font-size: 18px;
 }

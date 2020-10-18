@@ -2,13 +2,13 @@
 require('dbconnect.php');
 
 //idは必須・数字限定
-if (empty($_REQUEST['id'])||(!is_numeric($_REQUEST['id']))) {
+if (empty($_REQUEST['id']) || (!is_numeric($_REQUEST['id']))) {
     header('Location:index.php');
     exit;
 }
 
 //rtidは空欄のままもしくは数字限定
-if (!empty($_REQUEST['rtid'])&&(!is_numeric($_REQUEST['rtid']))) {
+if (!empty($_REQUEST['rtid']) && (!is_numeric($_REQUEST['rtid']))) {
     header('Location:index.php');
     exit;
 }
