@@ -29,7 +29,7 @@ if (!empty($_POST)) {
         header('Location:index.php');
         exit;
     }
-    if (($_POST['message'] ?? '') != '') {
+    if (($_POST['message'] ?? '') !== '') {
       $posts = $db->prepare('INSERT INTO posts SET message=?, member_id=?, reply_post_id=?, retweet_post_id=?,created=NOW()');
       $posts->execute(array($_POST['message'], $member['id'], ($_POST['reply_post_id'] ?? ''), ($_POST['rt_post_id'] ?? '')));
       header('Location:index.php');

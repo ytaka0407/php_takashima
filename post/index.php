@@ -37,7 +37,7 @@ function makelink($value)
 //投稿を取得する
 $page = ($_REQUEST['page'] ?? 1);
 
-if (!$page == 1) {
+if (!$page === 1) {
     $page = max($page, 1);
 }
 
@@ -79,7 +79,7 @@ $likes->bindParam(1, $member['id'], PDO::PARAM_INT);
 $likes->execute();
 $like = $likes->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
 
-//IDごとにリツイート回数集計取得
+//IDごとのリツイート回数集計取得
 $countquery=$db->prepare(
 'SELECT retweet_post_id as id, count(*) as retweetcount FROM posts WHERE switch=1 GROUP BY retweet_post_id');
 $countquery->execute();
@@ -145,7 +145,7 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
                                     <input type="hidden" name="message" value="<?php echo h($post['message']) ?>">
                                     <input class="retweet_button" type="submit" value="retweet">
                                 </form>
-                                <!--元のツイートのリツイート回数表示-->
+                                <!--元のツイートのリツイート回数表示。集計データが存在しない場合は０-->
                                 <?php echo (h($retweetcount[$post['retweet_post_id']][0]['retweetcount'] ?? 0)); ?>
                             </div>
                             <p class="day"><a href="view.php?id=<?php echo h($post['retweet_post_id']); ?>"><?php echo h($post['ori_created']); ?></a></p>
@@ -186,7 +186,7 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
                         <?php if (($post['reply_post_id'] ?? 0) > 0) : ?>
                             <a href="view.php?id=<?php echo h($post['reply_post_id']); ?>">返信元のメッセージ</a>
                         <?php endif; ?>
-                        <?php if ($_SESSION['id'] == $post['member_id']) : ?>
+                        <?php if ($_SESSION['id'] === $post['member_id']) : ?>
                             <?php if (($post['retweet_post_id'] ?? '')) : ?>
                                 [<a href="delete_retweet.php?id=<?php echo h($post['id']); ?>">リツイート取消</a>]
                             <?php else : ?>

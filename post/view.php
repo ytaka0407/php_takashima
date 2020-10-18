@@ -61,7 +61,7 @@ function h($value)
                 <?php else : ?>
                     <p><?php echo h($post['message']); ?><span class="name">(<?php echo h($post['name']); ?>)</span></p>
                     <p><span class="day"><?php echo h($post['created']); ?></span></p>
-                    <?php if ($_SESSION['id'] == $post['member_id']) : ?>
+                    <?php if ($_SESSION['id'] === $post['member_id']) : ?>
                         <?php if (($ori_post ?? FALSE)) : ?>
                             [<a href="delete_retweet.php?id=<?php echo h($ori_post['id']); ?>">リツイート取消</a>]
                         <?php else : ?>
