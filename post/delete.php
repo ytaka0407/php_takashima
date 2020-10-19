@@ -3,7 +3,8 @@ session_start();
 require('dbconnect.php');
 
 //ログイン検査
-if (isset($_SESSION['id'])) {
+//セッションが有効かつ$_REQUEST['id']は数字のみ
+if ((isset($_SESSION['id'])) && (is_numeric($_REQUEST['id']))) {
     $id = $_REQUEST['id'];
 
     //投稿検査

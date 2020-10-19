@@ -9,9 +9,9 @@ function h($value)
 }
 
 //ログイン検査
-if (isset($_SESSION['id'])) {
+//セッションが有効かつ$_REQUEST['id']は数字のみ
+if ((isset($_SESSION['id'])) && (is_numeric($_REQUEST['id']))) {
     $id = $_REQUEST['id'];
-
     //投稿検査
     $messages = $db->prepare('SELECT p1.id,p1.member_id,p1.message,p1.retweet_post_id,p2.member_id as ori_memberid,m.name as ori_membername,m.picture as ori_memberpicture
     FROM posts as p1
