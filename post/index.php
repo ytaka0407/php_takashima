@@ -140,7 +140,7 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
                                 <?php $likecount = isset($likecounts[$post['retweet_post_id']][0]['count']) ? ($likecounts[$post['retweet_post_id']][0]['count']) : 0;
                                 echo ($likecount); ?>
                                 <!--リツイートボタン-->
-                                <form class="retweet" action="post.php" method="post">
+                                <form class="retweet" action="retweet_post.php" method="post">
                                     <input type="hidden" name="id" value="<?php echo h($member['id']); ?>">
                                     <input type="hidden" name="rt_post_id" value="<?php echo h($post['retweet_post_id']); ?>">
                                     <input type="hidden" name="message" value="<?php echo h($post['message']) ?>">
@@ -172,7 +172,7 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
                             echo ($likecount);
                             ?>
                             <!--リツイート-->
-                            <form class="retweet" action="post.php" method="post">
+                            <form class="retweet" action="retweet_post.php" method="post">
                                 <input type="hidden" name="id" value="<?php echo h($member['id']); ?>">
                                 <input type="hidden" name="rt_post_id" value="<?php echo h($post['id']); ?>">
                                 <input type="hidden" name="message" value="<?php echo h($post['message']) ?>">
