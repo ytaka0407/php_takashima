@@ -62,7 +62,7 @@ $posts = $db->prepare(
   LEFT JOIN members as m1 ON p1.member_id=m1.id
   LEFT JOIN posts as p2 ON p1.retweet_post_id=p2.id
   LEFT JOIN members as m2 ON p2.member_id=m2.id
-  WHERE p1.switch=1
+  WHERE p1.switch=TRUE
   ORDER BY p1.created DESC LIMIT ?,5;'
 );
 $posts->bindParam(1, $start, PDO::PARAM_INT);
@@ -81,7 +81,7 @@ $like = $likes->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
 
 //IDごとのリツイート回数集計取得
 $countquery = $db->prepare(
-    'SELECT retweet_post_id as id, count(*) as retweetcount FROM posts WHERE switch=1 GROUP BY retweet_post_id'
+    'SELECT retweet_post_id as id, count(*) as retweetcount FROM posts WHERE switch=TRUE GROUP BY retweet_post_id'
 );
 $countquery->execute();
 $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
