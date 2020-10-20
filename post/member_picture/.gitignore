@@ -1,0 +1,2 @@
+#member_picture内画像はコミット対象外。ただしempty.jpgは画像未登録時固定なので除外。
+!empty.jpg
