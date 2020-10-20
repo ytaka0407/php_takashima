@@ -49,7 +49,7 @@ if ((isset($_SESSION['id'])) && (is_numeric($_REQUEST['id']))) {
             <p>リツイートを取消します。</p>
             <p>元のツイート</p>
             <div class="msg">
-                <p><img src="member_picture/<?php echo (h($message['ori_memberpicture'])); ?>" height="48" width="48" alt="<?php echo (h($message['ori_membername'])); ?>">
+                <p><img src="member_picture/<?php echo (h($message['ori_memberpicture'])); ?>" height="48" width="48" alt="icon">
                     <?php echo (h($message['ori_membername'])); ?>さん
                 </p>
                 <?php echo htmlspecialchars($message['message'], ENT_QUOTES); ?>

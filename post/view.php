@@ -52,10 +52,10 @@ function h($value)
             <p><a href="index.php">一覧に戻る</a></p>
             <?php if ($post = $posts->fetch()) : ?>
                 <div class="msg">
-                    <img src="member_picture/<?php echo h($post['picture']); ?>" width="48" height="48" alt="<?php echo h($post['name']); ?>"><?php echo h($post['name']); ?>さん
+                    <img src="member_picture/<?php echo h($post['picture']); ?>" width="48" height="48" alt="icon"><?php echo h($post['name']); ?>さん
                     <?php if ($ori_post ?? FALSE) : ?>がリツイート
                     <div class="retweettext">
-                        <p><img src="member_picture/<?php echo h($ori_post['picture']); ?>" width="48" height="48" alt="<?php echo h($ori_post['name']); ?>"><?php echo h($ori_post['name']); ?>さん</p>
+                        <p><img src="member_picture/<?php echo h($ori_post['picture']); ?>" width="48" height="48"  alt="icon"><?php echo h($ori_post['name']); ?>さん</p>
                         <p><?php echo h($ori_post['message']); ?></p>
                         <p><span class="day"><?php echo h($ori_post['created']); ?></span></p>
                     </div>
