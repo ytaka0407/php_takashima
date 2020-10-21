@@ -18,7 +18,7 @@ if (!empty($_POST)) {
         $member = $login->fetch();
 
         if ($member) {
-            if (($_POST['save'] ?? '') == 'on') {
+            if (($_POST['save'] ?? '') === 'on') {
                 setcookie('email', $_POST['email'], time() + 60 * 60 * 24 * 14);
                 setcookie('password', $_POST['password'], time() + 60 * 60 * 24 * 14);
             }
@@ -62,8 +62,8 @@ if (!empty($_POST)) {
                     <dd><input type="text" name="email" size="35" maxlength="255" value="<?php echo htmlspecialchars(($_POST['email'] ?? ''), ENT_QUOTES); ?>"></dd>
                     <dt>パスワード</dt>
                     <dd><input type="password" name="password" size="10" maxlength="20" value="<?php echo htmlspecialchars(($_POST['password'] ?? ''), ENT_QUOTES); ?>"></dd>
-                    <?php if (($error['login'] ?? '') == 'blank') : ?><p class="error">*メールアドレスとパスワードを入力して下さい。
-                        </p><?php elseif (($error['login'] ?? '') == 'failed') : ?><p class="error">ログインに失敗しました。入力内容をご確認下さい。</p><?php endif; ?>
+                    <?php if (($error['login'] ?? '') === 'blank') : ?><p class="error">*メールアドレスとパスワードを入力して下さい。
+                        </p><?php elseif (($error['login'] ?? '') === 'failed') : ?><p class="error">ログインに失敗しました。入力内容をご確認下さい。</p><?php endif; ?>
                     <dt>ログイン状態の記録</dt>
                     <dd><input type="checkbox" name="save" value="on"><label for="save">次回からは自動的にログインする</label></dd>
                 </dl>
