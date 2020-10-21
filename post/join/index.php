@@ -35,7 +35,7 @@ if (!empty($_POST)) {
     $filename = $_FILES['image']['name'];
     if (!empty($filename)) {
         $ext = substr($filename, -3);
-        if ($ext != 'jpg' && $ext != 'gif' && $ext != 'JPG') {
+        if ($ext !== 'jpg' && $ext !== 'gif' && $ext !== 'JPG') {
             $error['image'] = 'type';
         }
     }
@@ -50,7 +50,7 @@ if (!empty($_POST)) {
     }
 
     if (empty($error)) {
-        if ($_FILES['image']['name'] != '') {
+        if ($_FILES['image']['name'] !== '') {
             $image = date('YmdHis') . $_FILES['image']['name'];
             move_uploaded_file($_FILES['image']['tmp_name'], '../member_picture/' . $image);
         } else {

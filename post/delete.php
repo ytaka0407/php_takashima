@@ -12,7 +12,7 @@ if ((isset($_SESSION['id'])) && (is_numeric($_REQUEST['id']))) {
     $messages->execute(array($id));
     $message = $messages->fetch();
     //投稿者IDとログインIDの一致
-    if ($message['member_id'] != $_SESSION['id']) {
+    if ($message['member_id'] !== $_SESSION['id']) {
         header('Location:login.php');
         exit;
     }

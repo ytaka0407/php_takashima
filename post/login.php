@@ -2,7 +2,7 @@
 session_start();
 require('dbconnect.php');
 
-if (($_COOKIE['email'] ?? '') != '') {
+if (($_COOKIE['email'] ?? '') !== '') {
     $_POST['email'] = $_COOKIE['email'];
     $_POST['password'] = $_COOKIE['password'];
     $_POST['save'] = 'on';
@@ -11,7 +11,7 @@ if (($_COOKIE['email'] ?? '') != '') {
 //入力内容チェック
 
 if (!empty($_POST)) {
-    if ($_POST['email'] != '' && $_POST['password'] != '') {
+    if ($_POST['email'] !== '' && $_POST['password'] !== '') {
 
         $login = $db->prepare('SELECT * FROM members WHERE email=? AND password=?');
         $login->execute(array($_POST['email'], sha1($_POST['password'])));
