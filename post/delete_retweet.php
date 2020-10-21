@@ -37,7 +37,7 @@ if (is_numeric($_REQUEST['id'])) {
     }
 }
 
-//取得した結果のori_post_idが存在しない場合(URLパラメータの$_REQUEST['id']リツイート投稿ではない場合)
+//取得した結果のori_post_idが存在しない場合(URLパラメータの$_REQUEST['id']がリツイート投稿ではない場合)
 //セルフリツイートか判定
 if (!$message['retweet_post_id']) {
     //ユーザーのリツイート履歴取得。取消対象の投稿idをリツイートしたリツイート投稿idを取得(セルフリツイートならこのidが取り消す投稿id)
@@ -46,7 +46,7 @@ if (!$message['retweet_post_id']) {
     $retweetposts->execute();
     $retweetlist = $retweetposts->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
     $id = ($retweetlist[$message['id']][0]['postid'] ?? '');
-    //ユーザーのリツイート履歴にidが該当なかった場合、一覧へ戻る。
+    //ユーザーのリツイート履歴にidが該当なかった場合、取消条件不一致のため一覧へ戻る。
     if ($id === '') {
         header('Location:index.php');
         exit;
