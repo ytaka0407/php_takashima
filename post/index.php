@@ -194,11 +194,7 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
                             <a href="view.php?id=<?php echo h($post['reply_post_id']); ?>">返信元のメッセージ</a>
                         <?php endif; ?>
                         <?php if ($_SESSION['id'] === $post['member_id']) : ?>
-                            <?php if (($post['retweet_post_id'] ?? '')) : ?>
-                                [<a href="delete_retweet.php?id=<?php echo h($post['id']); ?>">リツイート取消</a>]
-                            <?php else : ?>
                                 [<a href="delete.php?id=<?php echo h($post['id']); ?>">削除</a>]
-                            <?php endif; ?>
                         <?php endif; ?>
                     </p>
                 </div>
