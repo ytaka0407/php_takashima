@@ -40,3 +40,7 @@
     background-color: inherit;
     font-size: 18px;
 }
+
+.retweeticon :hover{
+    text-decoration: none;
+}

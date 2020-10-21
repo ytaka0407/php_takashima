@@ -149,9 +149,9 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
                                 <?php $likecount = isset($likecounts[$post['retweet_post_id']][0]['count']) ? ($likecounts[$post['retweet_post_id']][0]['count']) : 0;
                                 echo ($likecount); ?>
                                 <!--リツイートボタン-->
-                                <!--$post['name']が$member['id']と一致している場合（ユーザーがリツイートした本人の場合）はリツイート取消ボタンを表示。-->
+                                <!--$post['name']が$member['id']と一致している場合（ユーザーがリツイートした本人の場合）はリツイートアイコンを黒にする-->
                                 <?php if ($post['member_id'] === $member['id']) : ?>
-                                    <a class="fas fa-retweet" href="delete_retweet.php?id=<?php echo h($post['id']); ?>" style="color:#000000"></a>
+                                    <a class="retweeticon" href="delete_retweet.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet" style="color:#000000"></i></a>
                                 <?php else : ?>
                                     <form class="retweet" action="retweet_post.php" method="post">
                                         <input type="hidden" name="id" value="<?php echo h($member['id']); ?>">
@@ -191,7 +191,7 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
                             <!--リツイート-->
                             <!--予め取得したユーザーのリツイートリストと表示する投稿idが一致していたらリツイート取消-->
                             <?php if (in_array($post['id'], $retweetlist)) : ?>
-                                <a class="fas fa-retweet" href="delete_retweet.php?id=<?php echo h($post['id']); ?>" style="color:#000000"></a>
+                                <a class="retweeticon" href="delete_retweet.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet" style="color:#000000"></i></a>
                             <?php else : ?>
                                 <form class="retweet" action="retweet_post.php" method="post">
                                     <input type="hidden" name="id" value="<?php echo h($member['id']); ?>">
