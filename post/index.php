@@ -140,14 +140,20 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
                                 <?php $likecount = isset($likecounts[$post['retweet_post_id']][0]['count']) ? ($likecounts[$post['retweet_post_id']][0]['count']) : 0;
                                 echo ($likecount); ?>
                                 <!--リツイートボタン-->
+                            <!--$post['name']が$member['id']と一致している場合（ユーザーがリツイートした本人の場合）はリツイート取消ボタンを表示。-->
+                            <?php if($post['member_id']===$member['id']):?>
+                                <a class="retweet-cancel" href="delete_retweet.php?id=<?php echo h($post['id']); ?>">retweet取消</a>
+                            <?php else:?>
                                 <form class="retweet" action="retweet_post.php" method="post">
                                     <input type="hidden" name="id" value="<?php echo h($member['id']); ?>">
                                     <input type="hidden" name="rt_post_id" value="<?php echo h($post['retweet_post_id']); ?>">
                                     <input type="hidden" name="message" value="<?php echo h($post['message']) ?>">
                                     <input class="retweet_button" type="submit" value="retweet">
                                 </form>
+                            <?php endif?>
                                 <!--元のツイートのリツイート回数表示。集計データが存在しない場合は０-->
                                 <?php echo (h($retweetcount[$post['retweet_post_id']][0]['retweetcount'] ?? 0)); ?>
+                                [<a href="index.php?res=<?php echo h($post['retweet_post_id']); ?>">Re:</a>]
                             </div>
                             <p class="day"><a href="view.php?id=<?php echo h($post['retweet_post_id']); ?>"><?php echo h($post['ori_created']); ?></a></p>
                         </div>
