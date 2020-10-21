@@ -83,9 +83,9 @@ $like = $likes->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
 $retweetposts = $db->prepare('SELECT retweet_post_id FROM posts WHERE member_id=? AND switch=1 AND retweet_post_id<>0');
 $retweetposts->bindParam(1, $member['id'], PDO::PARAM_INT);
 $retweetposts->execute();
-$retweetlist=[];
-foreach($retweetposts as $retweetitem){
-    array_push($retweetlist,$retweetitem['retweet_post_id']);
+$retweetlist = [];
+foreach ($retweetposts as $retweetitem) {
+    array_push($retweetlist, $retweetitem['retweet_post_id']);
 };
 
 //IDごとのリツイート回数集計取得
@@ -151,15 +151,17 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
                                 <!--リツイートボタン-->
                                 <!--$post['name']が$member['id']と一致している場合（ユーザーがリツイートした本人の場合）はリツイート取消ボタンを表示。-->
                                 <?php if ($post['member_id'] === $member['id']) : ?>
-                                    <a class="retweet-cancel" href="delete_retweet.php?id=<?php echo h($post['id']); ?>">retweet取消</a>
+                                    <a class="fas fa-retweet" href="delete_retweet.php?id=<?php echo h($post['id']); ?>" style="color:#000000"></a>
                                 <?php else : ?>
                                     <form class="retweet" action="retweet_post.php" method="post">
                                         <input type="hidden" name="id" value="<?php echo h($member['id']); ?>">
                                         <input type="hidden" name="rt_post_id" value="<?php echo h($post['retweet_post_id']); ?>">
                                         <input type="hidden" name="message" value="<?php echo h($post['message']) ?>">
-                                        <input class="retweet_button" type="submit" value="retweet">
+                                        <button class="retweet_button" type="submit" name="retweet" value="retweet" style="outline:none">
+                                            <i class="fas fa-retweet" style="color:#999"></i>
+                                        </button>
                                     </form>
-                                <?php endif ?>
+                                <?php endif; ?>
                                 <!--元のツイートのリツイート回数表示。集計データが存在しない場合は０-->
                                 <?php echo (h($retweetcount[$post['retweet_post_id']][0]['retweetcount'] ?? 0)); ?>
                                 [<a href="index.php?res=<?php echo h($post['retweet_post_id']); ?>">Re:</a>]
@@ -188,8 +190,8 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
                             ?>
                             <!--リツイート-->
                             <!--予め取得したユーザーのリツイートリストと表示する投稿idが一致していたらリツイート取消-->
-                            <?php if (in_array($post['id'],$retweetlist)):?>
-                                <a class="retweet-cancel" href="delete_retweet.php?id=<?php echo h($post['id']); ?>">retweet取消</a>
+                            <?php if (in_array($post['id'], $retweetlist)) : ?>
+                                <a class="fas fa-retweet" href="delete_retweet.php?id=<?php echo h($post['id']); ?>" style="color:#000000"></a>
                             <?php else : ?>
                                 <form class="retweet" action="retweet_post.php" method="post">
                                     <input type="hidden" name="id" value="<?php echo h($member['id']); ?>">
@@ -210,7 +212,9 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
                             <a href="view.php?id=<?php echo h($post['reply_post_id']); ?>">返信元のメッセージ</a>
                         <?php endif; ?>
                         <?php if ($_SESSION['id'] === $post['member_id']) : ?>
-                            [<a href="delete.php?id=<?php echo h($post['id']); ?>">削除</a>]
+                            <?php if (!($post['retweet_post_id'] ?? '')) : ?>
+                                [<a href="delete.php?id=<?php echo h($post['id']); ?>">削除</a>]
+                            <?php endif; ?>
                         <?php endif; ?>
                     </p>
                 </div>
