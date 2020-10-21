@@ -151,7 +151,7 @@ $retweetcount = $countquery->fetchall(PDO::FETCH_ASSOC | PDO::FETCH_GROUP);
                                 <!--リツイートボタン-->
                                 <!--$post['name']が$member['id']と一致している場合（ユーザーがリツイートした本人の場合）はリツイートアイコンを黒にする-->
                                 <?php if ($post['member_id'] === $member['id']) : ?>
-                                    <a class="retweeticon" href="delete_retweet.php?id=<?php echo h($post['id']); ?>"><i class="fas fa-retweet" style="color:#000000"></i></a>
+                                    <a class="retweeticon" href="delete_retweet.php?id=<?php echo h($post['retweet_post_id']); ?>"><i class="fas fa-retweet" style="color:#000000"></i></a>
                                 <?php else : ?>
                                     <form class="retweet" action="retweet_post.php" method="post">
                                         <input type="hidden" name="id" value="<?php echo h($member['id']); ?>">
