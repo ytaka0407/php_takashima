@@ -34,7 +34,7 @@ if (($_POST['message'] ?? '') !== '') {
     $checkquery->execute();
     $result = $checkquery->fetch();
     if ($result) {
-        if ($result['switch'] == FALSE) {
+        if ($result['switch'] === '0') {
             $changeaction = $db->prepare('UPDATE posts SET message=?, switch=TRUE WHERE id=?');
             $changeaction->execute(array($_REQUEST['message'], $result['id']));
             header('Location:index.php');
