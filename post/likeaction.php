@@ -42,7 +42,7 @@ if (($_POST['like'] ?? '') === 'change') {
         $newaction->execute();
     } else {
         //取得データのswitchがTRUEの場合はFALSE、そうでなければTRUEにUPDATE
-        $switch = ($result['switch'] ==TRUE) ? FALSE : TRUE;
+        $switch = ($result['switch'] !== '1');
         $changeaction = $db->prepare('UPDATE likeactions SET switch=? WHERE id=?');
         $changeaction->bindParam(1, $switch, PDO::PARAM_INT);
         $changeaction->bindParam(2, $result['id'], PDO::PARAM_INT);
