@@ -1,23 +1,16 @@
 <?php
 session_start();
+require('dbconnect.php');
 
-if (isset($_SESSION['id'])) {
-    $_SESSION = array();
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
-    }
-    session_destroy();
-
-    setcookie('email', '', time() - 3600);
-    setcookie('password', '', time() - 3600);
+//ログインチェック
+if (isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()) {
+    $_SESSION['time'] = time();
 } else {
     header('Location:login.php');
     exit;
 }
-
-
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -28,6 +21,7 @@ if (isset($_SESSION['id'])) {
     <title>ひとこと掲示板</title>
 
     <link rel="stylesheet" href="stylesheets/style.css" />
+    <link rel="stylesheet" href="stylesheets/styleadd.css" />
 </head>
 
 <body>
@@ -36,9 +30,9 @@ if (isset($_SESSION['id'])) {
             <h1>ひとこと掲示板</h1>
         </div>
         <div id="content">
-            <p>ログアウトしました。</p>
+            <p><a href="index.php">一覧に戻る</a></p>
+            <p>既にリツイート済みの投稿です。</p>
         </div>
-        <a href="login.php">ログイン画面へ</a>
     </div>
 </body>
 

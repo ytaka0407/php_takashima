@@ -3,7 +3,8 @@ session_start();
 require('dbconnect.php');
 
 //ログイン検査
-if (isset($_SESSION['id'])) {
+//セッションが有効かつ$_REQUEST['id']は数字のみ
+if ((isset($_SESSION['id'])) && (is_numeric($_REQUEST['id']))) {
     $id = $_REQUEST['id'];
 
     //投稿検査
@@ -11,8 +12,8 @@ if (isset($_SESSION['id'])) {
     $messages->execute(array($id));
     $message = $messages->fetch();
     //投稿者IDとログインIDの一致
-    if ($message['member_id'] == $_SESSION['id']) {
-        $del = $db->prepare('DELETE FROM posts WHERE id=?');
+    if ($message['member_id'] === $_SESSION['id']) {
+        $del = $db->prepare('UPDATE posts SET switch=0 WHERE id=?');
         $del->execute(array($id));
     }
 } else {
@@ -30,7 +31,7 @@ if (isset($_SESSION['id'])) {
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ひとこと掲示板</title>
 
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="stylesheets/style.css" />
 </head>
 
 <body>

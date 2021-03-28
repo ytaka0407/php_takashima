@@ -1,0 +1,48 @@
+.retweettext {
+    margin-left: 30px;
+    border: solid #999 1px;
+    background-color: #ccecee;
+}
+
+.msg img {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.likeform {
+    display: inline;
+}
+
+.icon-font {
+    font-size: 0.8em;
+    color: #999;
+    border: solid, #333, 1px;
+}
+
+.heart {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.heart:focus {
+    outline: none;
+}
+
+.retweet {
+    display: inline-block;
+}
+
+.retweet_button {
+    display: inline;
+    border: none;
+    outline: none;
+    background-color: inherit;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.retweeticon :hover{
+    text-decoration: none;
+}
